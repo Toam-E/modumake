@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "./ThemeToggle";
 import { RobotSelection } from "./RobotSelection";
 import { SensorCustomization } from "./SensorCustomization";
 import { SimulationSelection } from "./SimulationSelection";
@@ -104,12 +103,10 @@ const ModumakeDemo = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold glow-text">
-              Modumake
+              Robot Configurator
             </h1>
-            <p className="text-muted-foreground">Modular Robotics Platform</p>
+            <p className="text-muted-foreground">Build Your Custom Robot Kit</p>
           </div>
-          
-          <ThemeToggle />
           
           {/* Stage Indicator */}
           <div className="flex items-center gap-4">
