@@ -2,14 +2,18 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 const NotFound = () => {
-  const location = useLocation();
+  // const location = useLocation();
 
-  useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
-  }, [location.pathname]);
+  // const allowedPaths = [
+  //   import.meta.env.BASE_URL,
+  //   import.meta.env.BASE_URL + "some-other-path",
+  // ];
+
+  // useEffect(() => {
+  //   if (!allowedPaths.includes(location.pathname)) {
+  //     console.error("404 Error: Unexpected route:", location.pathname);
+  //   }
+  // }, [location.pathname]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
