@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "./ThemeToggle";
 import { RobotSelection } from "./RobotSelection";
 import { SensorCustomization } from "./SensorCustomization";
 import { SimulationSelection } from "./SimulationSelection";
 import { SummaryScreen } from "./SummaryScreen";
 
 export type RobotType = "arm" | "quadruped" | "wheeled" | null;
+export type RobotMode = "development" | "education";
 export type SensorType = "camera" | "lidar" | "imu" | "ultrasonic" | "force";
 export type SimulationTier = "basic" | "advanced" | "full" | null;
 
 export interface DemoState {
   currentStage: number;
   selectedRobot: RobotType;
+  robotMode: RobotMode;
   selectedSensors: SensorType[];
   selectedSimulation: SimulationTier;
 }
@@ -21,6 +24,7 @@ const ModumakeDemo = () => {
   const [state, setState] = useState<DemoState>({
     currentStage: 0,
     selectedRobot: null,
+    robotMode: "development",
     selectedSensors: [],
     selectedSimulation: null,
   });
@@ -38,6 +42,41 @@ const ModumakeDemo = () => {
   const prevStage = () => {
     if (state.currentStage > 0) {
       updateState({ currentStage: state.currentStage - 1 });
+    }
+  };
+
+  const goToStage = (targetStage: number) => {
+    if (targetStage < state.currentStage) {
+      // Going backward - preserve selections that are still valid
+      let updates: Partial<DemoState> = { currentStage: targetStage };
+      
+      // If going back to robot selection, reset everything after
+      if (targetStage === 0) {
+        updates = { 
+          ...updates, 
+          selectedSensors: [], 
+          selectedSimulation: null 
+        };
+      }
+      // If going back to sensor selection, reset simulation
+      else if (targetStage === 1) {
+        updates = { ...updates, selectedSimulation: null };
+      }
+      
+      updateState(updates);
+    } else if (canProceedToStage(targetStage)) {
+      updateState({ currentStage: targetStage });
+    }
+  };
+
+  const canProceedToStage = (targetStage: number) => {
+    if (targetStage <= state.currentStage) return true;
+    
+    switch (targetStage) {
+      case 1: return state.selectedRobot !== null;
+      case 2: return state.selectedRobot !== null && state.selectedSensors.length > 0;
+      case 3: return state.selectedRobot !== null && state.selectedSensors.length > 0 && state.selectedSimulation !== null;
+      default: return false;
     }
   };
 
@@ -70,6 +109,8 @@ const ModumakeDemo = () => {
             <p className="text-muted-foreground">Modular Robotics Platform</p>
           </div>
           
+          <ThemeToggle />
+          
           {/* Stage Indicator */}
           <div className="flex items-center gap-4">
             {stageNames.map((name, index) => (
@@ -77,12 +118,17 @@ const ModumakeDemo = () => {
                 index === state.currentStage ? 'text-primary' : 
                 index < state.currentStage ? 'text-accent' : 'text-muted-foreground'
               }`}>
-                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
-                  index === state.currentStage ? 'border-primary bg-primary text-primary-foreground' : 
-                  index < state.currentStage ? 'border-accent bg-accent text-accent-foreground' : 'border-muted'
-                }`}>
+                <button
+                  onClick={() => goToStage(index)}
+                  disabled={index > state.currentStage && !canProceedToStage(index)}
+                  className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium transition-all duration-200 ${
+                    index === state.currentStage ? 'border-primary bg-primary text-primary-foreground' : 
+                    index < state.currentStage ? 'border-accent bg-accent text-accent-foreground hover:scale-110 cursor-pointer' : 
+                    'border-muted cursor-not-allowed'
+                  } ${index <= state.currentStage ? 'hover:scale-105' : ''}`}
+                >
                   {index + 1}
-                </div>
+                </button>
                 <span className="text-sm font-medium">{name}</span>
                 {index < stageNames.length - 1 && (
                   <ArrowUp className="w-4 h-4 rotate-90 ml-2" />
@@ -99,7 +145,9 @@ const ModumakeDemo = () => {
           {state.currentStage === 0 && (
             <RobotSelection 
               selectedRobot={state.selectedRobot}
+              robotMode={state.robotMode}
               onSelectRobot={(robot) => updateState({ selectedRobot: robot })}
+              onSelectMode={(mode) => updateState({ robotMode: mode })}
             />
           )}
           

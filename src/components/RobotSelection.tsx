@@ -1,55 +1,109 @@
-import { RobotType } from "./ModumakeDemo";
+import { RobotType, RobotMode } from "./ModumakeDemo";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import robotArmImg from "@/assets/robot-arm.jpg";
 import quadrupedImg from "@/assets/quadruped-robot.jpg";
 import wheeledImg from "@/assets/wheeled-robot.jpg";
 
 interface RobotSelectionProps {
   selectedRobot: RobotType;
+  robotMode: RobotMode;
   onSelectRobot: (robot: RobotType) => void;
+  onSelectMode: (mode: RobotMode) => void;
 }
 
-const robots = [
-  {
-    id: "arm" as const,
-    name: "Robot Arm",
-    description: "6-DOF manipulator perfect for precision tasks, pick-and-place operations, and research applications",
-    image: robotArmImg,
-    features: ["6 Degrees of Freedom", "Precision Gripper", "Force Feedback", "Modular Joints"]
-  },
-  {
-    id: "quadruped" as const,
-    name: "Quadruped Robot",
-    description: "Four-legged mobile platform ideal for terrain navigation, gait research, and autonomous exploration",
-    image: quadrupedImg,
-    features: ["Dynamic Walking", "Terrain Adaptation", "IMU Stabilization", "Modular Legs"]
-  },
-  {
-    id: "wheeled" as const,
-    name: "Wheeled Robot",
-    description: "Mobile platform optimized for navigation research, SLAM applications, and autonomous vehicle studies",
-    image: wheeledImg,
-    features: ["Omnidirectional Movement", "SLAM Ready", "Sensor Platform", "Modular Chassis"]
-  }
-];
+const robots = {
+  development: [
+    {
+      id: "arm" as const,
+      name: "Robot Arm",
+      description: "Professional 6-DOF manipulator for advanced research, precision manufacturing, and complex automation tasks",
+      image: robotArmImg,
+      features: ["6 Degrees of Freedom", "Force Feedback Control", "High Precision Servos", "ROS2 Integration"]
+    },
+    {
+      id: "quadruped" as const,
+      name: "Quadruped Robot",
+      description: "Advanced four-legged platform for dynamic locomotion research, terrain adaptation, and autonomous navigation",
+      image: quadrupedImg,
+      features: ["Dynamic Walking", "Real-time Balance", "Advanced IMU Array", "Research SDK"]
+    },
+    {
+      id: "wheeled" as const,
+      name: "Wheeled Robot",
+      description: "High-performance mobile platform for SLAM research, autonomous navigation, and sensor fusion applications",
+      image: wheeledImg,
+      features: ["Omnidirectional Drive", "SLAM Navigation", "Multi-Sensor Fusion", "ROS2 Compatible"]
+    }
+  ],
+  education: [
+    {
+      id: "arm" as const,
+      name: "Robot Arm",
+      description: "Educational 4-DOF manipulator perfect for learning robotics fundamentals and programming concepts",
+      image: robotArmImg,
+      features: ["4 Degrees of Freedom", "Simple Programming", "Safety Features", "Educational Resources"]
+    },
+    {
+      id: "quadruped" as const,
+      name: "Quadruped Robot",
+      description: "Educational four-legged robot for learning walking algorithms and basic balance control",
+      image: quadrupedImg,
+      features: ["Basic Walking", "Balance Control", "Simple Programming", "Learning Materials"]
+    },
+    {
+      id: "wheeled" as const,
+      name: "Wheeled Robot",
+      description: "Educational mobile platform for learning navigation basics and sensor programming",
+      image: wheeledImg,
+      features: ["Differential Drive", "Basic Navigation", "Sensor Integration", "Tutorial Included"]
+    }
+  ]
+};
 
-export const RobotSelection = ({ selectedRobot, onSelectRobot }: RobotSelectionProps) => {
+export const RobotSelection = ({ selectedRobot, robotMode, onSelectRobot, onSelectMode }: RobotSelectionProps) => {
+  const currentRobots = robots[robotMode];
   return (
     <div className="py-12 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-8 animate-fade-in">
           <h2 className="text-4xl font-bold mb-4">
             Choose Your <span className="glow-text">Robot Platform</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Select the perfect modular robot base for your research and prototyping needs. 
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+            Select the perfect modular robot base for your needs. 
             Each platform offers unique capabilities and customization options.
           </p>
+          
+          {/* Mode Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <Label htmlFor="robot-mode" className="text-lg font-medium">
+              Education
+            </Label>
+            <Switch
+              id="robot-mode"
+              checked={robotMode === "development"}
+              onCheckedChange={(checked) => onSelectMode(checked ? "development" : "education")}
+              className="data-[state=checked]:bg-primary"
+            />
+            <Label htmlFor="robot-mode" className="text-lg font-medium">
+              Development
+            </Label>
+          </div>
+          
+          <div className="text-center mb-4">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-muted/20 border border-border rounded-lg">
+              <span className="text-sm font-medium">
+                {robotMode === "development" ? "🔬 Professional Research & Development" : "📚 Educational & Learning"}
+              </span>
+            </span>
+          </div>
         </div>
 
         {/* Robot Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {robots.map((robot, index) => (
+          {currentRobots.map((robot, index) => (
             <div
               key={robot.id}
               className={`robot-card cursor-pointer transform transition-all duration-500 ${
@@ -118,7 +172,7 @@ export const RobotSelection = ({ selectedRobot, onSelectRobot }: RobotSelectionP
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
               <span className="text-primary font-medium">
-                {robots.find(r => r.id === selectedRobot)?.name} selected
+                {currentRobots.find(r => r.id === selectedRobot)?.name} selected
               </span>
             </div>
           </div>

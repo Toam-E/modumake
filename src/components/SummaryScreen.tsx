@@ -1,6 +1,6 @@
-import { DemoState } from "./ModumakeDemo";
+import { DemoState, RobotMode } from "./ModumakeDemo";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Download, Mail } from "lucide-react";
+import { ShoppingCart, Download, Mail, Settings, Package } from "lucide-react";
 import robotArmImg from "@/assets/robot-arm.jpg";
 import quadrupedImg from "@/assets/quadruped-robot.jpg";
 import wheeledImg from "@/assets/wheeled-robot.jpg";
@@ -50,13 +50,20 @@ const simulationPrices = {
 };
 
 const robotBasePrices = {
-  arm: 2499,
-  quadruped: 3999,
-  wheeled: 1999
+  development: {
+    arm: 2499,
+    quadruped: 3999,
+    wheeled: 1999
+  },
+  education: {
+    arm: 1299,
+    quadruped: 1999,
+    wheeled: 899
+  }
 };
 
 export const SummaryScreen = ({ state }: SummaryScreenProps) => {
-  const robotPrice = robotBasePrices[state.selectedRobot!];
+  const robotPrice = robotBasePrices[state.robotMode][state.selectedRobot!];
   const sensorsPrice = state.selectedSensors.reduce((sum, sensor) => sum + sensorPrices[sensor], 0);
   const simulationPrice = simulationPrices[state.selectedSimulation!];
   const totalHardware = robotPrice + sensorsPrice;
@@ -75,21 +82,89 @@ export const SummaryScreen = ({ state }: SummaryScreenProps) => {
           </p>
         </div>
 
+        {/* Visual Configuration Overview */}
+        <div className="mb-12">
+          <div className="robot-card text-center">
+            <h3 className="text-2xl font-bold mb-6 flex items-center justify-center gap-2">
+              <Package className="w-6 h-6" />
+              Configuration Overview
+            </h3>
+            <div className="grid lg:grid-cols-3 gap-8 items-center">
+              {/* Robot Visual */}
+              <div className="flex flex-col items-center">
+                <img
+                  src={robotImages[state.selectedRobot!]}
+                  alt={robotNames[state.selectedRobot!]}
+                  className="w-48 h-48 object-contain mb-4 animate-float"
+                />
+                <h4 className="text-lg font-semibold">{robotNames[state.selectedRobot!]}</h4>
+                <span className="text-sm text-muted-foreground capitalize">
+                  {state.robotMode} Mode
+                </span>
+              </div>
+              
+              {/* Configuration Details */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                  <span className="font-medium">Platform:</span>
+                  <span className="text-primary font-semibold">{robotNames[state.selectedRobot!]}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                  <span className="font-medium">Mode:</span>
+                  <span className="text-accent font-semibold capitalize">{state.robotMode}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                  <span className="font-medium">Sensors:</span>
+                  <span className="text-secondary font-semibold">{state.selectedSensors.length}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
+                  <span className="font-medium">Simulation:</span>
+                  <span className="text-primary font-semibold">{simulationNames[state.selectedSimulation!]}</span>
+                </div>
+              </div>
+              
+              {/* Total Price Preview */}
+              <div className="text-center">
+                <div className="bg-primary/10 border border-primary/20 rounded-2xl p-6">
+                  <div className="text-3xl font-bold text-primary mb-2">
+                    ${totalHardware.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-2">Hardware Total</div>
+                  <div className="text-lg font-semibold text-secondary">
+                    +${monthlySimulation}/month
+                  </div>
+                  <div className="text-xs text-muted-foreground">Simulation Package</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Configuration Summary */}
+          {/* Detailed Configuration */}
           <div className="space-y-6">
             {/* Robot Platform */}
             <div className="robot-card">
-              <h3 className="text-2xl font-bold mb-6">Robot Platform</h3>
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                <Settings className="w-6 h-6" />
+                Platform Details
+              </h3>
               <div className="flex items-center gap-6">
                 <img
                   src={robotImages[state.selectedRobot!]}
                   alt={robotNames[state.selectedRobot!]}
-                  className="w-32 h-32 object-contain"
+                  className="w-24 h-24 object-contain"
                 />
                 <div className="flex-1">
                   <h4 className="text-xl font-semibold mb-2">{robotNames[state.selectedRobot!]}</h4>
-                  <p className="text-muted-foreground mb-4">Professional modular robotics platform</p>
+                  <p className="text-muted-foreground mb-2">
+                    {state.robotMode === "development" ? "Professional research platform" : "Educational learning platform"}
+                  </p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm px-2 py-1 bg-accent/20 text-accent rounded-full">
+                      {state.robotMode.toUpperCase()}
+                    </span>
+                  </div>
                   <div className="text-2xl font-bold text-primary">${robotPrice.toLocaleString()}</div>
                 </div>
               </div>
