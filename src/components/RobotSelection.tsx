@@ -1,9 +1,12 @@
 import { RobotType, RobotMode } from "./ModumakeDemo";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import robotArmImg from "@/assets/robot-arm.jpg";
-import quadrupedImg from "@/assets/quadruped-robot.jpg";
-import wheeledImg from "@/assets/wheeled-robot.jpg";
+import robotArmImg from "@/assets/robot-arm.png";
+import quadrupedImg from "@/assets/quadruped-robot.png";
+import wheeledImg from "@/assets/wheeled-robot.png";
+import robotArmImgE from "@/assets/Educational/robot-arm.png";
+import quadrupedImgE from "@/assets/Educational/quadruped-robot.png";
+import wheeledImgE from "@/assets/Educational/wheeled-robot.png";
 
 interface RobotSelectionProps {
   selectedRobot: RobotType;
@@ -41,21 +44,21 @@ const robots = {
       id: "arm" as const,
       name: "Robot Arm",
       description: "Educational 4-DOF manipulator perfect for learning robotics fundamentals and programming concepts",
-      image: robotArmImg,
+      image: robotArmImgE,
       features: ["4 Degrees of Freedom", "Simple Programming", "Safety Features", "Educational Resources"]
     },
     {
       id: "quadruped" as const,
       name: "Quadruped Robot",
       description: "Educational four-legged robot for learning walking algorithms and basic balance control",
-      image: quadrupedImg,
+      image: quadrupedImgE,
       features: ["Basic Walking", "Balance Control", "Simple Programming", "Learning Materials"]
     },
     {
       id: "wheeled" as const,
       name: "Wheeled Robot",
       description: "Educational mobile platform for learning navigation basics and sensor programming",
-      image: wheeledImg,
+      image: wheeledImgE,
       features: ["Differential Drive", "Basic Navigation", "Sensor Integration", "Tutorial Included"]
     }
   ]

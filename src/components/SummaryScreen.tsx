@@ -1,9 +1,9 @@
 import { DemoState, RobotMode } from "./ModumakeDemo";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Download, Mail, Settings, Package } from "lucide-react";
-import robotArmImg from "@/assets/robot-arm.jpg";
-import quadrupedImg from "@/assets/quadruped-robot.jpg";
-import wheeledImg from "@/assets/wheeled-robot.jpg";
+import robotArmImg from "@/assets/robot-arm.png";
+import quadrupedImg from "@/assets/quadruped-robot.png";
+import wheeledImg from "@/assets/wheeled-robot.png";
 
 interface SummaryScreenProps {
   state: DemoState;

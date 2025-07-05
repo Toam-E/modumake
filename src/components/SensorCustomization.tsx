@@ -1,8 +1,8 @@
 import { RobotType, SensorType } from "./ModumakeDemo";
 import { Camera, Radar, Zap, Volume2, Grip } from "lucide-react";
-import robotArmImg from "@/assets/robot-arm.jpg";
-import quadrupedImg from "@/assets/quadruped-robot.jpg";
-import wheeledImg from "@/assets/wheeled-robot.jpg";
+import robotArmImg from "@/assets/robot-arm.png";
+import quadrupedImg from "@/assets/quadruped-robot.png";
+import wheeledImg from "@/assets/wheeled-robot.png";
 
 interface SensorCustomizationProps {
   selectedRobot: RobotType;
