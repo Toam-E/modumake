@@ -12,7 +12,7 @@ const simulationTiers = [
     name: "Basic Simulation",
     description: "Essential physics simulation with basic sensor modeling",
     icon: Cpu,
-    price: "$49/month",
+    price: "$0/month",
     features: [
       "Physics Engine",
       "Basic Sensor Models", 
